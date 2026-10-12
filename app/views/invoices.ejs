@@ -1,0 +1,82 @@
+<%- include('partials/header') %>
+
+<div class="card">
+  <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+    <!-- Bộ lọc trạng thái -->
+    <div style="display: flex; gap: 8px;">
+      <a href="/invoices" class="btn btn-sm <%= !statusFilter ? 'btn-primary' : 'btn-outline' %>">Tất cả</a>
+      <a href="/invoices?status=PAID" class="btn btn-sm <%= statusFilter === 'PAID' ? 'btn-success' : 'btn-outline' %>">Đã thanh toán</a>
+      <a href="/invoices?status=PENDING" class="btn btn-sm <%= statusFilter === 'PENDING' ? 'btn-primary' : 'btn-outline' %>">Chờ thanh toán</a>
+      <a href="/invoices?status=OVERDUE" class="btn btn-sm <%= statusFilter === 'OVERDUE' ? 'btn-danger' : 'btn-outline' %>">Quá hạn</a>
+    </div>
+
+    <!-- Tìm kiếm & Tạo mới -->
+    <div style="display: flex; gap: 1rem; align-items: center;">
+      <form action="/invoices" method="GET" style="display: flex; gap: 8px;">
+        <% if (statusFilter) { %><input type="hidden" name="status" value="<%= statusFilter %>"><% } %>
+        <input type="text" name="search" class="form-control" style="width: 220px;" placeholder="Số HĐ hoặc tên KH..." value="<%= search %>">
+        <button type="submit" class="btn btn-outline btn-sm"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+      <a href="/invoices/create" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-plus"></i> Tạo Hóa Đơn Mới
+      </a>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Số Hóa Đơn</th>
+          <th>Khách Hàng</th>
+          <th>Ngày Lập</th>
+          <th>Hạn Thanh Toán</th>
+          <th>Tổng Tiền</th>
+          <th>Đã Thanh Toán</th>
+          <th>Trạng Thái</th>
+          <th style="text-align: right;">Thao Tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (invoices.length === 0) { %>
+          <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">Không tìm thấy hóa đơn nào phù hợp</td></tr>
+        <% } else { %>
+          <% invoices.forEach(inv => { %>
+            <tr>
+              <td>
+                <a href="/invoices/<%= inv.id %>" style="font-weight: 700; color: var(--primary); text-decoration: none;">
+                  <%= inv.invoice_number %>
+                </a>
+              </td>
+              <td>
+                <strong><%= inv.customer_name %></strong>
+                <div style="font-size: 0.8rem; color: var(--text-muted);"><%= inv.customer_code %></div>
+              </td>
+              <td><%= formatDate(inv.issue_date) %></td>
+              <td>
+                <%= formatDate(inv.due_date) %>
+                <% if (inv.status === 'OVERDUE') { %>
+                  <span style="color: var(--danger); font-size: 0.75rem; font-weight: 600;"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                <% } %>
+              </td>
+              <td style="font-weight: 700;"><%= formatCurrency(inv.total_amount) %></td>
+              <td style="font-weight: 600; color: var(--success);"><%= formatCurrency(inv.paid_amount) %></td>
+              <td>
+                <span class="badge badge-<%= inv.status.toLowerCase() %>">
+                  <%= inv.status === 'PAID' ? 'Đã thanh toán' : (inv.status === 'PENDING' ? 'Chờ thanh toán' : (inv.status === 'OVERDUE' ? 'Quá hạn' : 'Đã hủy')) %>
+                </span>
+              </td>
+              <td style="text-align: right;">
+                <a href="/invoices/<%= inv.id %>" class="btn btn-outline btn-sm" title="Xem chi tiết & In">
+                  <i class="fa-solid fa-eye"></i> Xem & In
+                </a>
+              </td>
+            </tr>
+          <% }); %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

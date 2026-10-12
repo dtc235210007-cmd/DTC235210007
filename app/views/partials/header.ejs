@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | Hệ thống Quản lý Hóa đơn</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+      </div>
+      <div>
+        <div class="sidebar-brand">BILLING PRO</div>
+        <div style="font-size: 0.75rem; color: #94a3b8;">Hệ thống Hóa đơn v1.0</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-link <%= path === '/' ? 'active' : '' %>">
+        <i class="fa-solid fa-chart-pie" style="width: 20px;"></i>
+        <span>Bảng điều khiển</span>
+      </a>
+      <a href="/invoices" class="nav-link <%= path === '/invoices' ? 'active' : '' %>">
+        <i class="fa-solid fa-receipt" style="width: 20px;"></i>
+        <span>Quản lý Hóa đơn</span>
+      </a>
+      <a href="/customers" class="nav-link <%= path === '/customers' ? 'active' : '' %>">
+        <i class="fa-solid fa-users" style="width: 20px;"></i>
+        <span>Khách hàng</span>
+      </a>
+      <a href="/payments" class="nav-link <%= path === '/payments' ? 'active' : '' %>">
+        <i class="fa-solid fa-credit-card" style="width: 20px;"></i>
+        <span>Thanh toán</span>
+      </a>
+      <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 0.75rem 0;">
+      <a href="/metrics" target="_blank" class="nav-link">
+        <i class="fa-solid fa-gauge-high" style="width: 20px;"></i>
+        <span>Prometheus Metrics</span>
+      </a>
+      <a href="/health" target="_blank" class="nav-link">
+        <i class="fa-solid fa-heart-pulse" style="width: 20px;"></i>
+        <span>Kiểm tra Sức khỏe (/health)</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div style="color: #cbd5e1; font-weight: 600; margin-bottom: 4px;">Đề tài 18: Quản lý Hóa đơn</div>
+      <div>Môn: T&QTH Phần mềm</div>
+      <div style="margin-top: 6px; font-size: 0.7rem; color: #38bdf8;">Docker • Nginx • Prometheus • Loki</div>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+    <header class="topbar">
+      <h1 class="page-title"><%= title %></h1>
+
+      <div class="topbar-actions">
+        <% if (locals.currentUser) { %>
+          <div class="user-profile-badge">
+            <i class="fa-solid fa-circle-user" style="color: var(--primary); font-size: 1.1rem;"></i>
+            <span style="font-weight: 600;"><%= currentUser.full_name %></span>
+            <span class="badge badge-paid" style="font-size: 0.7rem;"><%= currentUser.role %></span>
+          </div>
+          <a href="/logout" class="btn btn-outline btn-sm btn-logout" title="Đăng xuất khỏi hệ thống">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
+          </a>
+        <% } %>
+        <button type="button" id="btn-trigger-error" class="btn btn-outline btn-sm" title="Tạo lỗi HTTP 500 giả lập để kiểm tra Grafana Loki">
+          <i class="fa-solid fa-bug" style="color: #ef4444;"></i>
+          <span>Tạo Log Lỗi (Test Loki)</span>
+        </button>
+        <a href="/invoices/create" class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-plus"></i>
+          <span>Tạo Hóa Đơn Mới</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="content-body">

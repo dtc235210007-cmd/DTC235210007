@@ -1,0 +1,196 @@
+<%- include('partials/header') %>
+
+<!-- 1. STATS OVERVIEW CARDS -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-info">
+      <h4>Doanh thu đã thu</h4>
+      <div class="stat-value" style="color: var(--success);"><%= formatCurrency(stats.total_revenue) %></div>
+    </div>
+    <div class="stat-icon icon-green">
+      <i class="fa-solid fa-sack-dollar"></i>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-info">
+      <h4>Công nợ chờ thu</h4>
+      <div class="stat-value" style="color: var(--warning);"><%= formatCurrency(stats.total_pending) %></div>
+    </div>
+    <div class="stat-icon icon-orange">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-info">
+      <h4>Tổng số hóa đơn</h4>
+      <div class="stat-value"><%= stats.total_invoices %></div>
+    </div>
+    <div class="stat-icon icon-blue">
+      <i class="fa-solid fa-file-invoice"></i>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-info">
+      <h4>Tổng khách hàng</h4>
+      <div class="stat-value"><%= stats.total_customers %></div>
+    </div>
+    <div class="stat-icon icon-blue">
+      <i class="fa-solid fa-building-user"></i>
+    </div>
+  </div>
+</div>
+
+<!-- 2. CHARTS SECTION -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-chart-line" style="color: var(--primary); margin-right: 8px;"></i> Xu hướng Doanh thu (6 tháng gần nhất)</h3>
+    </div>
+    <div class="card-body">
+      <canvas id="revenueChart" height="130"></canvas>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-chart-pie" style="color: var(--warning); margin-right: 8px;"></i> Cơ cấu Trạng thái HĐ</h3>
+    </div>
+    <div class="card-body" style="display: flex; align-items: center; justify-content: center;">
+      <canvas id="statusChart" height="180"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- 3. RECENT INVOICES & PAYMENTS -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+  <!-- Recent Invoices -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-receipt" style="color: var(--primary); margin-right: 8px;"></i> Hóa đơn gần đây</h3>
+      <a href="/invoices" class="btn btn-outline btn-sm">Xem tất cả</a>
+    </div>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Số HĐ</th>
+            <th>Khách hàng</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (recentInvoices.length === 0) { %>
+            <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Chưa có hóa đơn nào</td></tr>
+          <% } else { %>
+            <% recentInvoices.forEach(inv => { %>
+              <tr>
+                <td><a href="/invoices/<%= inv.id %>" style="font-weight: 600; color: var(--primary); text-decoration: none;"><%= inv.invoice_number %></a></td>
+                <td><div style="max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<%= inv.customer_name %>"><%= inv.customer_name %></div></td>
+                <td style="font-weight: 600;"><%= formatCurrency(inv.total_amount) %></td>
+                <td>
+                  <span class="badge badge-<%= inv.status.toLowerCase() %>">
+                    <%= inv.status === 'PAID' ? 'Đã TT' : (inv.status === 'PENDING' ? 'Chờ TT' : (inv.status === 'OVERDUE' ? 'Quá hạn' : 'Hủy')) %>
+                  </span>
+                </td>
+              </tr>
+            <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Recent Payments -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-money-bill-transfer" style="color: var(--success); margin-right: 8px;"></i> Giao dịch Thanh toán mới</h3>
+      <a href="/payments" class="btn btn-outline btn-sm">Xem tất cả</a>
+    </div>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Mã GD</th>
+            <th>Hóa đơn</th>
+            <th>Số tiền</th>
+            <th>Ngày TT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (recentPayments.length === 0) { %>
+            <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Chưa có giao dịch thanh toán nào</td></tr>
+          <% } else { %>
+            <% recentPayments.forEach(pay => { %>
+              <tr>
+                <td style="font-weight: 600;"><%= pay.payment_number %></td>
+                <td><%= pay.invoice_number %></td>
+                <td style="font-weight: 600; color: var(--success);"><%= formatCurrency(pay.amount) %></td>
+                <td><%= formatDate(pay.payment_date) %></td>
+              </tr>
+            <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Render Chart.js
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Biểu đồ doanh thu
+    const revCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revCtx, {
+      type: 'line',
+      data: {
+        labels: ['T5/2026', 'T6/2026', 'T7/2026', 'T8/2026', 'T9/2026', 'T10/2026'],
+        datasets: [{
+          label: 'Doanh thu (triệu VNĐ)',
+          data: [45, 62, 58, 95, 110, <%= Math.round(stats.total_revenue / 1000000) %>],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37, 99, 235, 0.1)',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: '#2563eb'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // 2. Biểu đồ tròn trạng thái hóa đơn
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Đã thanh toán', 'Chờ thanh toán', 'Quá hạn'],
+        datasets: [{
+          data: [<%= stats.paid_invoices %>, <%= stats.pending_invoices %>, <%= stats.overdue_invoices %>],
+          backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15 } }
+        },
+        cutout: '70%'
+      }
+    });
+  });
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,22 @@
+# Environment files
+.env
+.env.local
+
+# Dependency directories
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Prometheus / Grafana / Loki data volumes if mapped to host
+data/
+
+test.txt

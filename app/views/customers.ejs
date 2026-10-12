@@ -1,0 +1,176 @@
+<%- include('partials/header') %>
+
+<div class="card">
+  <div class="card-header">
+    <div style="display: flex; gap: 1rem; align-items: center; flex: 1;">
+      <form action="/customers" method="GET" style="display: flex; gap: 8px; flex: 1; max-width: 400px;">
+        <input type="text" name="search" class="form-control" placeholder="Tìm theo tên, mã KH, MST..." value="<%= search %>">
+        <button type="submit" class="btn btn-outline"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+      <% if (search) { %>
+        <a href="/customers" class="btn btn-outline btn-sm">Xóa bộ lọc</a>
+      <% } %>
+    </div>
+    <button type="button" class="btn btn-primary" data-modal-target="modal-add-customer">
+      <i class="fa-solid fa-plus"></i> Thêm Khách Hàng
+    </button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Mã KH</th>
+          <th>Tên Công ty / Cá nhân</th>
+          <th>Mã số thuế</th>
+          <th>Liên hệ</th>
+          <th>Địa chỉ</th>
+          <th>Số HĐ</th>
+          <th>Tổng chi tiêu</th>
+          <th style="text-align: right;">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (customers.length === 0) { %>
+          <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">Không tìm thấy khách hàng nào</td></tr>
+        <% } else { %>
+          <% customers.forEach(c => { %>
+            <tr>
+              <td style="font-weight: 700; color: var(--primary);"><%= c.customer_code %></td>
+              <td><strong><%= c.name %></strong></td>
+              <td><code><%= c.tax_id || 'N/A' %></code></td>
+              <td>
+                <div><i class="fa-solid fa-envelope" style="width: 16px; color: var(--text-muted);"></i> <%= c.email || 'N/A' %></div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-phone" style="width: 16px;"></i> <%= c.phone || 'N/A' %></div>
+              </td>
+              <td style="max-width: 200px; font-size: 0.85rem; color: var(--text-muted);"><%= c.address || 'N/A' %></td>
+              <td style="font-weight: 600;"><%= c.total_invoices %></td>
+              <td style="font-weight: 700; color: var(--success);"><%= formatCurrency(c.total_billed) %></td>
+              <td style="text-align: right;">
+                <button type="button" class="btn btn-outline btn-sm btn-edit-customer" 
+                  data-id="<%= c.id %>"
+                  data-name="<%= c.name %>"
+                  data-taxid="<%= c.tax_id %>"
+                  data-email="<%= c.email %>"
+                  data-phone="<%= c.phone %>"
+                  data-address="<%= c.address %>">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <form action="/customers/delete/<%= c.id %>" method="POST" style="display: inline-block;" onsubmit="return confirm('Bạn có chắc muốn xóa khách hàng này?');">
+                  <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL THÊM KHÁCH HÀNG -->
+<div class="modal-overlay" id="modal-add-customer">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title"><i class="fa-solid fa-user-plus" style="color: var(--primary); margin-right: 8px;"></i> Thêm Khách hàng mới</h4>
+      <button type="button" class="btn btn-outline btn-sm" data-modal-close>✕</button>
+    </div>
+    <form action="/customers" method="POST">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Mã khách hàng *</label>
+          <input type="text" name="customer_code" class="form-control" placeholder="VD: KH-006" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tên Doanh nghiệp / Khách hàng *</label>
+          <input type="text" name="name" class="form-control" placeholder="VD: Công ty TNHH..." required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mã số thuế</label>
+          <input type="text" name="tax_id" class="form-control" placeholder="VD: 0101234567">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="contact@company.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Số điện thoại</label>
+            <input type="text" name="phone" class="form-control" placeholder="0901234567">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Địa chỉ trụ sở</label>
+          <textarea name="address" class="form-control" rows="2" placeholder="Số nhà, đường, quận/huyện, tỉnh/TP..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-modal-close>Hủy</button>
+        <button type="submit" class="btn btn-primary">Lưu khách hàng</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL SỬA KHÁCH HÀNG -->
+<div class="modal-overlay" id="modal-edit-customer">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title"><i class="fa-solid fa-pen-to-square" style="color: var(--primary); margin-right: 8px;"></i> Cập nhật thông tin Khách hàng</h4>
+      <button type="button" class="btn btn-outline btn-sm" data-modal-close>✕</button>
+    </div>
+    <form id="form-edit-customer" action="" method="POST">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Tên Doanh nghiệp / Khách hàng *</label>
+          <input type="text" id="edit_name" name="name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mã số thuế</label>
+          <input type="text" id="edit_tax_id" name="tax_id" class="form-control">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" id="edit_email" name="email" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Số điện thoại</label>
+            <input type="text" id="edit_phone" name="phone" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Địa chỉ trụ sở</label>
+          <textarea id="edit_address" name="address" class="form-control" rows="2"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-modal-close>Hủy</button>
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const editBtns = document.querySelectorAll('.btn-edit-customer');
+    const modalEdit = document.getElementById('modal-edit-customer');
+    const formEdit = document.getElementById('form-edit-customer');
+
+    editBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        formEdit.action = `/customers/edit/${id}`;
+        document.getElementById('edit_name').value = btn.getAttribute('data-name');
+        document.getElementById('edit_tax_id').value = btn.getAttribute('data-taxid');
+        document.getElementById('edit_email').value = btn.getAttribute('data-email');
+        document.getElementById('edit_phone').value = btn.getAttribute('data-phone');
+        document.getElementById('edit_address').value = btn.getAttribute('data-address');
+        modalEdit.classList.add('active');
+      });
+    });
+  });
+</script>
+
+<%- include('partials/footer') %>

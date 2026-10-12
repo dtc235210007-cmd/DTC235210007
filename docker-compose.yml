@@ -1,0 +1,243 @@
+version: '3.8'
+
+services:
+  # =========================================================================
+  # 1. WEB APPLICATION (NODE.JS EXPRESS BILLING MANAGEMENT)
+  # =========================================================================
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: billing_app
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+      - app_logs:/app/logs
+    networks:
+      - frontend_net
+      - backend_net
+      - monitoring_net
+    depends_on:
+      db:
+        condition: service_healthy
+    # Hardening bảo mật Container
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+
+  # =========================================================================
+  # 2. CƠ SỞ DỮ LIỆU POSTGRESQL (DATABASE)
+  # =========================================================================
+  db:
+    image: postgres:16-alpine
+    container_name: billing_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - backend_net
+    # Hardening: KHÔNG expose cổng 5432 ra bên ngoài host, chỉ truy cập nội bộ trong backend_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+
+  # =========================================================================
+  # 3. CÔNG CỤ QUẢN LÝ DATABASE PGADMIN 4
+  # =========================================================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: billing_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_LISTEN_PORT: 80
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+    ports:
+      - "5050:80"
+    networks:
+      - backend_net
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # =========================================================================
+  # 4. NGINX REVERSE PROXY VỚI HTTPS VÀ SECURITY HEADERS
+  # =========================================================================
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: billing_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - nginx_logs:/var/log/nginx
+    networks:
+      - frontend_net
+      - monitoring_net
+    depends_on:
+      - app
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  # =========================================================================
+  # 5. POSTGRES EXPORTER (THU THẬP METRICS POSTGRESQL CHO PROMETHEUS)
+  # =========================================================================
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: billing_postgres_exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable"
+    networks:
+      - backend_net
+      - monitoring_net
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # =========================================================================
+  # 6. HỆ THỐNG GIÁM SÁT PROMETHEUS
+  # =========================================================================
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    container_name: billing_prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - monitoring_net
+    depends_on:
+      - app
+      - postgres-exporter
+
+  # =========================================================================
+  # 7. TRỰC QUAN HÓA METRICS VỚI GRAFANA
+  # =========================================================================
+  grafana:
+    image: grafana/grafana:10.4.0
+    container_name: billing_grafana
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/etc/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    networks:
+      - monitoring_net
+    depends_on:
+      - prometheus
+
+  # =========================================================================
+  # 8. HỆ THỐNG LƯU TRỮ LOG TẬP TRUNG LOKI
+  # =========================================================================
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: billing_loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/loki-config.yml
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./logging/loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki_data:/loki
+    networks:
+      - monitoring_net
+
+  # =========================================================================
+  # 9. THU THẬP VÀ ĐẨY LOG PROMTAIL
+  # =========================================================================
+  promtail:
+    image: grafana/promtail:3.0.0
+    container_name: billing_promtail
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/promtail-config.yml
+    volumes:
+      - ./logging/promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - nginx_logs:/var/log/nginx:ro
+      - app_logs:/app/logs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - monitoring_net
+    depends_on:
+      - loki
+
+# =========================================================================
+# HARDENING: PHÂN VÙNG MẠNG CÁCH LY 3 TẦNG (NETWORK ISOLATION)
+# =========================================================================
+networks:
+  frontend_net:
+    driver: bridge
+    name: billing_frontend_net
+  backend_net:
+    driver: bridge
+    name: billing_backend_net
+  monitoring_net:
+    driver: bridge
+    name: billing_monitoring_net
+
+# =========================================================================
+# DỮ LIỆU BỀN VỮNG (PERSISTENT VOLUMES)
+# =========================================================================
+volumes:
+  postgres_data:
+  pgadmin_data:
+  prometheus_data:
+  grafana_data:
+  loki_data:
+  nginx_logs:
+  app_logs:
