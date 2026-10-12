@@ -1,0 +1,41 @@
+global:
+  scrape_interval: 10s
+  evaluation_interval: 10s
+  scrape_timeout: 5s
+
+# Các nguồn thu thập dữ liệu chỉ số (Scrape Configurations)
+scrape_configs:
+  # 1. Giám sát Ứng dụng Quản lý Hóa đơn (Billing Web App)
+  - job_name: 'billing-app'
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['app:3000']
+        labels:
+          environment: 'production'
+          service: 'billing-web'
+
+  # 2. Giám sát Cơ sở dữ liệu PostgreSQL qua postgres-exporter
+  - job_name: 'postgresql'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          environment: 'production'
+          service: 'billing-database'
+
+  # 3. Giám sát tài nguyên phần cứng Container qua cAdvisor
+  - job_name: 'cadvisor'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          environment: 'production'
+          service: 'container-metrics'
+
+  # 4. Tự giám sát chính Prometheus Server
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus-internal'
