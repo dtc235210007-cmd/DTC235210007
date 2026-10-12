@@ -21,10 +21,36 @@
 |               GHI LOG TẬP TRUNG LOKI VÀ HARDENING BẢO MẬT               |
 |                                                                         |
 |                                                                         |
-|       Giảng viên hướng dẫn : [Điền Họ và Tên Giảng Viên]                |
-|       Sinh viên thực hiện  : [Điền Họ và Tên Sinh Viên]                 |
+|       Giảng viên hướng dẫn : Lê Khánh Dương               |
+|       Sinh viên thực hiện  : Đằng Hữu Chinh                |
 |       Mã số sinh viên      : DTC235210007                               |
-|       Lớp chuyên ngành     : [Điền Lớp Chuyên Ngành]                    |
+|       Lớp chuyên ngành     : H CUỐI KỲ
+## MÔN: TRIỂN KHAI VÀ QUẢN TRỊ HỆ THỐNG PHẦN MỀM
+### ĐỀ TÀI 18: HỆ THỐNG QUẢN LÝ HÓA ĐƠN / BILLING MANAGEMENT SYSTEM
+
+---
+
+```
++-------------------------------------------------------------------------+
+|                BỘ GIÁO DỤC VÀ ĐÀO TẠO - ĐẠI HỌC THÁI NGUYÊN             |
+|         TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN VÀ TRUYỀN THÔNG (ICTU)       |
+|                                                                         |
+|                                                                         |
+|                          BÁO CÁO THỰC HÀNH                              |
+|                                                                         |
+|       MÔN HỌC: TRIỂN KHAI VÀ QUẢN TRỊ HỆ THỐNG PHẦN MỀM                 |
+|                                                                         |
+|       ĐỀ TÀI: XÂY DỰNG, TRIỂN KHAI VÀ QUẢN TRỊ                          |
+|               HỆ THỐNG QUẢN LÝ HÓA ĐƠN (BILLING SYSTEM)                 |
+|               TRÊN NỀN TẢNG DOCKER COMPOSE, NGINX HTTPS,                |
+|               GIÁM SÁT PROMETHEUS & GRAFANA,                            |
+|               GHI LOG TẬP TRUNG LOKI VÀ HARDENING BẢO MẬT               |
+|                                                                         |
+|                                                                         |
+|       Giảng viên hướng dẫn : ThS.Lê Khánh Dương               |
+|       Sinh viên thực hiện  : Đằng Hữu Chinh                |
+|       Mã số sinh viên      : DTC235210007                               |
+|       Lớp chuyên ngành     : CNTT K23H                   |
 |       Học kỳ / Năm học     : Học kỳ 1 - Năm học 2025 - 2026             |
 |                                                                         |
 |                                                                         |
