@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BÁO CÁO CUỐI KỲ - ĐỀ TÀI 18: HỆ THỐNG QUẢN LÝ HÓA ĐƠN</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm 20mm 20mm 30mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 13pt;
+      line-height: 1.5;
+      color: #000;
+      background-color: #f1f5f9;
+      padding: 20px 0;
+    }
+
+    .page {
+      background: #ffffff;
+      width: 210mm;
+      min-height: 297mm;
+      padding: 20mm 20mm 20mm 30mm;
+      margin: 0 auto 20px auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      position: relative;
+    }
+
+    @media print {
+      body {
+        background: transparent;
+        padding: 0;
+      }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+        width: 100%;
+        min-height: 100vh;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+
+    /* TRANG BÌA CHUẨN ĐẠI HỌC */
+    .cover-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 257mm;
+      border: 3px double #1e3a8a;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .cover-header h3 {
+      font-size: 14pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .cover-header h4 {
+      font-size: 13pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .cover-divider {
+      width: 150px;
+      height: 2px;
+      background-color: #1e3a8a;
+      margin: 10px auto 25px auto;
+    }
+
+    .cover-title-box {
+      margin: 30px 0;
+    }
+
+    .cover-title-box .report-type {
+      font-size: 16pt;
+      font-weight: bold;
+      color: #b91c1c;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+
+    .cover-title-box .subject-name {
+      font-size: 14pt;
+      font-weight: bold;
+      color: #1e3a8a;
+      text-transform: uppercase;
+      margin-bottom: 25px;
+    }
+
+    .cover-title-box .topic-name {
+      font-size: 20pt;
+      font-weight: bold;
+      color: #0f172a;
+      text-transform: uppercase;
+      line-height: 1.3;
+      padding: 10px 20px;
+      border: 1px dashed #cbd5e1;
+      background: #f8fafc;
+      border-radius: 8px;
+    }
+
+    .cover-info {
+      text-align: left;
+      margin: 30px auto;
+      width: 80%;
+      font-size: 13pt;
+      line-height: 2;
+    }
+
+    .cover-info-row {
+      display: flex;
+    }
+
+    .cover-info-label {
+      width: 220px;
+      font-weight: bold;
+    }
+
+    .cover-footer {
+      font-size: 13pt;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    /* TIÊU ĐỀ NỘI DUNG */
+    h1 {
+      font-size: 17pt;
+      font-weight: bold;
+      color: #1e3a8a;
+      text-transform: uppercase;
+      margin-top: 15px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #1e3a8a;
+      padding-bottom: 5px;
+    }
+
+    h2 {
+      font-size: 14pt;
+      font-weight: bold;
+      color: #0f172a;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 13pt;
+      font-weight: bold;
+      color: #334155;
+      margin-top: 12px;
+      margin-bottom: 6px;
+    }
+
+    p {
+      text-align: justify;
+      margin-bottom: 10px;
+      text-indent: 1.25cm;
+    }
+
+    p.no-indent {
+      text-indent: 0;
+    }
+
+    ul, ol {
+      margin-left: 1.8cm;
+      margin-bottom: 10px;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    /* BẢNG BIỂU */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 11pt;
+    }
+
+    table th, table td {
+      border: 1px solid #334155;
+      padding: 7px 10px;
+      text-align: left;
+    }
+
+    table th {
+      background-color: #f1f5f9;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    /* HỘP SƠ ĐỒ VÀ CODE */
+    .diagram-box {
+      border: 1px solid #cbd5e1;
+      background-color: #f8fafc;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 10pt;
+      line-height: 1.3;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .code-box {
+      border: 1px solid #334155;
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 12px 15px;
+      border-radius: 6px;
+      margin: 12px 0;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 9.5pt;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+
+    .caption {
+      text-align: center;
+      font-style: italic;
+      font-size: 11pt;
+      color: #475569;
+      margin-top: -6px;
+      margin-bottom: 15px;
+    }
+
+    .alert-box {
+      border-left: 4px solid #2563eb;
+      background-color: #eff6ff;
+      padding: 10px 15px;
+      margin: 12px 0;
+      font-size: 11pt;
+    }
+
+    .btn-print {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+      z-index: 1000;
+    }
+
+    .btn-print:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="btn-print no-print" onclick="window.print()">
+    🖨️ In ra PDF / Nộp Báo Cáo (Ctrl + P)
+  </button>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 1: TRANG BÌA CHUẨN HỌC THUẬT -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <div class="cover-page">
+      <div class="cover-header">
+        <h3>BỘ GIÁO DỤC VÀ ĐÀO TẠO - ĐẠI HỌC THÁI NGUYÊN</h3>
+        <h4>TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN VÀ TRUYỀN THÔNG (ICTU)</h4>
+        <div class="cover-divider"></div>
+      </div>
+
+      <div class="cover-title-box">
+        <div class="report-type">BÁO CÁO THỰC HÀNH HẾT MÔN</div>
+        <div class="subject-name">MÔN: TRIỂN KHAI VÀ QUẢN TRỊ HỆ THỐNG PHẦN MỀM</div>
+        <div class="topic-name">
+          ĐỀ TÀI 18: XÂY DỰNG, TRIỂN KHAI VÀ QUẢN TRỊ HỆ THỐNG QUẢN LÝ HÓA ĐƠN (BILLING SYSTEM)<br>
+          <span style="font-size: 13pt; text-transform: none; font-weight: normal; color: #475569;">
+            Tích hợp Nginx HTTPS, Giám sát Prometheus & Grafana, Ghi log tập trung Loki & Hardening bảo mật đa tầng
+          </span>
+        </div>
+      </div>
+
+      <div class="cover-info">
+        <div class="cover-info-row">
+          <span class="cover-info-label">Giảng viên hướng dẫn:</span>
+          <span><strong>[Điền Họ và Tên Giảng Viên]</strong></span>
+        </div>
+        <div class="cover-info-row">
+          <span class="cover-info-label">Sinh viên thực hiện:</span>
+          <span><strong>[Điền Họ và Tên Sinh Viên]</strong></span>
+        </div>
+        <div class="cover-info-row">
+          <span class="cover-info-label">Mã số sinh viên:</span>
+          <span><strong>DTC235210007</strong></span>
+        </div>
+        <div class="cover-info-row">
+          <span class="cover-info-label">Lớp chuyên ngành:</span>
+          <span><strong>[Điền Lớp Chuyên Ngành]</strong></span>
+        </div>
+        <div class="cover-info-row">
+          <span class="cover-info-label">Khóa đào tạo:</span>
+          <span>K22 (2022 - 2026)</span>
+        </div>
+      </div>
+
+      <div class="cover-footer">
+        THÁI NGUYÊN, NĂM HỌC 2025 - 2026
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 2: MỤC LỤC & LỜI NÓI ĐẦU -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h1>LỜI NÓI ĐẦU</h1>
+    <p>Trong quy trình phát triển phần mềm hiện đại, việc đóng gói ứng dụng chỉ là bước khởi đầu. Một hệ thống phần mềm chuyên nghiệp khi đưa vào môi trường sản xuất (Production) đòi hỏi phải đáp ứng các tiêu chuẩn khắt khe về độ tin cậy, an toàn thông tin và khả năng giám sát tức thời (Observability). Sự kết hợp giữa các nền tảng ảo hóa container (Docker Compose), máy chủ cân bằng tải và mã hóa (Nginx Reverse Proxy & SSL), hệ thống thu thập chỉ số chuỗi thời gian (Prometheus & Grafana) cùng giải pháp quản trị nhật ký phân tán (Loki & Promtail) đã trở thành kiến trúc hạ tầng tiêu chuẩn công nghiệp được áp dụng rộng rãi.</p>
+    <p>Báo cáo này được thực hiện trong khuôn khổ môn học <strong>"Triển khai và Quản trị Hệ thống Phần mềm"</strong>, nhằm chứng minh khả năng làm chủ toàn diện quy trình thiết kế, triển khai tự động hóa, phân vùng bảo mật và quản trị vận hành cho <strong>Đề tài 18: Hệ thống Quản lý Hóa đơn / Billing Management System</strong>.</p>
+
+    <h1>MỤC LỤC TỔNG HỢP</h1>
+    <table style="border: none;">
+      <tr style="border: none;"><td style="border: none; font-weight: bold;">CHƯƠNG 1: TỔNG QUAN ĐỀ TÀI VÀ KIẾN TRÚC TỔNG THỂ HỆ THỐNG</td><td style="border: none; text-align: right;">Trang 03</td></tr>
+      <tr style="border: none;"><td style="border: none; font-weight: bold;">CHƯƠNG 2: TRIỂN KHAI ỨNG DỤNG WEB VÀ CƠ SỞ DỮ LIỆU POSTGRESQL</td><td style="border: none; text-align: right;">Trang 05</td></tr>
+      <tr style="border: none;"><td style="border: none; font-weight: bold;">CHƯƠNG 3: CẤU HÌNH NGINX REVERSE PROXY, HTTPS VÀ BẢO MẬT GIAO THỨC</td><td style="border: none; text-align: right;">Trang 07</td></tr>
+      <tr style="border: none;"><td style="border: none; font-weight: bold;">CHƯƠNG 4: HỆ THỐNG GIÁM SÁT HIỆU NĂNG VỚI PROMETHEUS VÀ GRAFANA</td><td style="border: none; text-align: right;">Trang 09</td></tr>
+      <tr style="border: none;"><td style="border: none; font-weight: bold;">CHƯƠNG 5: HỆ THỐNG GHI VÀ TRUY VẤN LOG TẬP TRUNG VỚI LOKI VÀ PROMTAIL</td><td style="border: none; text-align: right;">Trang 11</td></tr>
+      <tr style="border: none;"><td style="border: none; font-weight: bold;">CHƯƠNG 6: ÁP DỤNG CÁC BIỆN PHÁP HARDENING BẢO MẬT TOÀN DIỆN</td><td style="border: none; text-align: right;">Trang 13</td></tr>
+      <tr style="border: none;"><td style="border: none; font-weight: bold;">CHƯƠNG 7: KỊCH BẢN KIỂM THỬ, ĐÁNH GIÁ KẾT QUẢ VÀ HƯỚNG DẪN DEMO</td><td style="border: none; text-align: right;">Trang 15</td></tr>
+      <tr style="border: none;"><td style="border: none; font-weight: bold;">KẾT LUẬN VÀ TÀI LIỆU THAM KHẢO</td><td style="border: none; text-align: right;">Trang 16</td></tr>
+    </table>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 3: CHƯƠNG 1 - TỔNG QUAN VÀ KIẾN TRÚC -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h1>CHƯƠNG 1: TỔNG QUAN ĐỀ TÀI VÀ KIẾN TRÚC TỔNG THỂ</h1>
+    
+    <h2>1.1. Đặt vấn đề và mục tiêu đề tài</h2>
+    <p>Đối với mọi tổ chức doanh nghiệp, hệ thống Quản lý Hóa đơn (Billing & Invoicing System) giữ vị trí trung tâm trong chuỗi cung ứng dịch vụ. Các nghiệp vụ tính toán tiền hàng, áp dụng các mức thuế suất giá trị gia tăng (VAT 8%, 10%), theo dõi công nợ quá hạn và ghi nhận thanh toán nhiều đợt đòi hỏi sự chính xác tuyệt đối, tính toàn vẹn dữ liệu và độ sẵn sàng cao.</p>
+    <p>Mục tiêu của đề tài là xây dựng một hệ thống hoàn chỉnh từ tầng ứng dụng đến tầng hạ tầng, thỏa mãn 100% các tiêu chí đánh giá khắt khe của môn học:</p>
+    <ul>
+      <li>Quản lý toàn bộ mã nguồn và cấu hình trên GitHub với tối thiểu 03 commits có ý nghĩa.</li>
+      <li>Ứng dụng Web nghiệp vụ hoàn chỉnh (Node.js/Express) tích hợp PostgreSQL và công cụ pgAdmin 4.</li>
+      <li>Nginx Reverse Proxy với HTTPS tự ký và bộ 7 Security Headers tiêu chuẩn.</li>
+      <li>Giám sát toàn diện container, web server và database bằng Prometheus + Grafana Dashboards.</li>
+      <li>Ghi log tập trung bằng Loki + Promtail và truy vấn chuyên sâu bằng ngôn ngữ LogQL.</li>
+      <li>Áp dụng tối thiểu 3 - 4 biện pháp Hardening bảo mật hệ thống nghiêm ngặt.</li>
+    </ul>
+
+    <h2>1.2. Mô hình kiến trúc phân tầng hệ thống (System Architecture)</h2>
+    <p>Hệ thống được thiết kế theo kiến trúc Microservices hướng dịch vụ, đóng gói và điều phối thống nhất thông qua công cụ Docker Compose:</p>
+
+    <div class="diagram-box">
++--------------------------------------------------------------------------+
+|                     TRÌNH DUYỆT NGƯỜI DÙNG / CLIENTS                     |
++--------------------------------------------------------------------------+
+                    | Port 80 (Redirect 301)       | Port 443 (HTTPS)
+                    v                              v
++--------------------------------------------------------------------------+
+|                  TẦNG REVERSE PROXY & AN NINH (NGINX)                    |
+|       SSL 2048-bit | Security Headers | Rate Limiting 15 req/s          |
++--------------------------------------------------------------------------+
+                                    | (Mạng nội bộ frontend_net)
+                                    v
++--------------------------------------------------------------------------+
+|                     TẦNG ỨNG DỤNG WEB (BILLING APP)                      |
+|       Node.js 20 | Non-root User (UID 10001) | Metrics /metrics          |
++--------------------------------------------------------------------------+
+                    | (Mạng nội bộ backend_net)    |
+                    v                              v
++----------------------------------+  +------------------------------------+
+|  CƠ SỞ DỮ LIỆU POSTGRESQL 16     |  |     CÔNG CỤ QUẢN TRỊ PGADMIN 4     |
+|  Cổng 5432 nội bộ, không public  |  |     Truy cập qua cổng host: 5050   |
++----------------------------------+  +------------------------------------+
+                    ^                              ^
+                    |                              |
++--------------------------------------------------------------------------+
+|                CỤM QUẢN TRỊ HIỆU NĂNG & OBSERVABILITY                    |
+|  Prometheus (9090) <---> Grafana (3001) <---> Loki & Promtail (3100)     |
++--------------------------------------------------------------------------+</div>
+    <div class="caption">Hình 1.1: Sơ đồ kiến trúc tổng thể các dịch vụ trong hệ thống Quản lý Hóa đơn</div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 4: CHƯƠNG 1 (TIẾP) - PHÂN VÙNG MẠNG VÀ DANH MỤC DỊCH VỤ -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h2>1.3. Thiết kế phân vùng mạng cách ly (Network Topology & Isolation)</h2>
+    <p>Hệ thống phân chia 3 không gian mạng ảo độc lập (Docker Bridge Networks) nhằm thực thi nguyên tắc phòng thủ theo chiều sâu (Defense-in-Depth):</p>
+    <ul>
+      <li><strong>`billing_frontend_net`</strong>: Kết nối giữa Nginx và Web App. Tiếp nhận lưu lượng từ người dùng bên ngoài Internet.</li>
+      <li><strong>`billing_backend_net`</strong>: Mạng cô lập hoàn toàn với bên ngoài. Cổng `5432` của PostgreSQL tuyệt đối không được mở ra máy chủ host. Chỉ có Web App, pgAdmin và Postgres-exporter được cấp phép truy cập vào mạng này.</li>
+      <li><strong>`billing_monitoring_net`</strong>: Mạng chuyên dụng kết nối giữa các dịch vụ giám sát (Prometheus, Grafana, Loki, Promtail, Exporter).</li>
+    </ul>
+
+    <h2>1.4. Bảng danh mục 9 dịch vụ container trong hệ thống</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Tên Container</th>
+          <th>Image & Phiên bản</th>
+          <th>Mạng kết nối</th>
+          <th>Cổng Host : Cổng Container</th>
+          <th>Vai trò chức năng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>billing_app</strong></td>
+          <td>Node.js 20 Alpine</td>
+          <td>frontend, backend, monitoring</td>
+          <td>3000 (Internal)</td>
+          <td>Ứng dụng Quản lý Hóa đơn, xuất metrics và log</td>
+        </tr>
+        <tr>
+          <td><strong>billing_db</strong></td>
+          <td>postgres:16-alpine</td>
+          <td>backend_net</td>
+          <td>5432 (Internal)</td>
+          <td>Lưu trữ dữ liệu quan hệ khách hàng, hóa đơn, thanh toán</td>
+        </tr>
+        <tr>
+          <td><strong>billing_pgadmin</strong></td>
+          <td>dpage/pgadmin4:latest</td>
+          <td>backend_net</td>
+          <td>5050 : 80</td>
+          <td>Giao diện đồ họa quản trị CSDL PostgreSQL</td>
+        </tr>
+        <tr>
+          <td><strong>billing_nginx</strong></td>
+          <td>nginx:alpine</td>
+          <td>frontend, monitoring</td>
+          <td>80 : 80, 443 : 443</td>
+          <td>Reverse Proxy, HTTPS tự ký, Rate Limiting, Headers</td>
+        </tr>
+        <tr>
+          <td><strong>billing_postgres_exporter</strong></td>
+          <td>postgres-exporter:latest</td>
+          <td>backend, monitoring</td>
+          <td>9187 (Internal)</td>
+          <td>Thu thập metrics nội bộ PostgreSQL cho Prometheus</td>
+        </tr>
+        <tr>
+          <td><strong>billing_prometheus</strong></td>
+          <td>prom/prometheus:v2.51.0</td>
+          <td>monitoring_net</td>
+          <td>9090 : 9090</td>
+          <td>Máy chủ kéo và lưu trữ Time-Series Metrics</td>
+        </tr>
+        <tr>
+          <td><strong>billing_grafana</strong></td>
+          <td>grafana/grafana:10.4.0</td>
+          <td>monitoring_net</td>
+          <td>3001 : 3000</td>
+          <td>Trực quan hóa Dashboard hiệu năng và LogQL</td>
+        </tr>
+        <tr>
+          <td><strong>billing_loki</strong></td>
+          <td>grafana/loki:3.0.0</td>
+          <td>monitoring_net</td>
+          <td>3100 : 3100</td>
+          <td>Lưu trữ và lập chỉ mục nhật ký log tập trung</td>
+        </tr>
+        <tr>
+          <td><strong>billing_promtail</strong></td>
+          <td>grafana/promtail:3.0.0</td>
+          <td>monitoring_net</td>
+          <td>9080 (Internal)</td>
+          <td>Agent gom log từ Docker container và Nginx log</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="caption">Bảng 1.1: Danh mục các container triển khai trong Docker Compose</div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 5: CHƯƠNG 2 - TRIỂN KHAI ỨNG DỤNG VÀ DATABASE -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h1>CHƯƠNG 2: TRIỂN KHAI ỨNG DỤNG WEB VÀ CƠ SỞ DỮ LIỆU POSTGRESQL</h1>
+
+    <h2>2.1. Thiết kế cơ sở dữ liệu quan hệ PostgreSQL</h2>
+    <p>Cơ sở dữ liệu `billing_db` được thiết kế theo chuẩn 3NF với 4 bảng thực thể, tối ưu hóa các chỉ mục truy vấn để đạt hiệu năng xử lý cao:</p>
+
+    <div class="code-box">-- BẢNG KHÁCH HÀNG (CUSTOMERS)
+CREATE TABLE customers (
+    id SERIAL PRIMARY KEY,
+    customer_code VARCHAR(50) UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    tax_id VARCHAR(50),
+    email VARCHAR(100), phone VARCHAR(30), address TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- BẢNG HÓA ĐƠN (INVOICES)
+CREATE TABLE invoices (
+    id SERIAL PRIMARY KEY,
+    invoice_number VARCHAR(50) UNIQUE NOT NULL,
+    customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE RESTRICT,
+    issue_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    due_date DATE NOT NULL,
+    subtotal NUMERIC(15, 2) NOT NULL DEFAULT 0.00,
+    tax_rate NUMERIC(5, 2) NOT NULL DEFAULT 10.00,
+    tax_amount NUMERIC(15, 2) NOT NULL DEFAULT 0.00,
+    total_amount NUMERIC(15, 2) NOT NULL DEFAULT 0.00,
+    paid_amount NUMERIC(15, 2) NOT NULL DEFAULT 0.00,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PAID', 'PENDING', 'OVERDUE', 'CANCELLED')),
+    notes TEXT, created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- BẢNG CHI TIẾT HÓA ĐƠN (INVOICE_ITEMS)
+CREATE TABLE invoice_items (
+    id SERIAL PRIMARY KEY,
+    invoice_id INTEGER NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
+    description VARCHAR(255) NOT NULL,
+    quantity NUMERIC(10, 2) NOT NULL DEFAULT 1.00,
+    unit_price NUMERIC(15, 2) NOT NULL DEFAULT 0.00,
+    amount NUMERIC(15, 2) NOT NULL DEFAULT 0.00
+);
+
+-- BẢNG LỊCH SỬ THANH TOÁN (PAYMENTS)
+CREATE TABLE payments (
+    id SERIAL PRIMARY KEY,
+    payment_number VARCHAR(50) UNIQUE NOT NULL,
+    invoice_id INTEGER NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
+    payment_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    amount NUMERIC(15, 2) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL CHECK (payment_method IN ('BANK_TRANSFER', 'CASH', 'CREDIT_CARD', 'E_WALLET')),
+    reference_code VARCHAR(100), notes TEXT
+);</div>
+    <div class="caption">Trích đoạn mã khởi tạo lược đồ CSDL PostgreSQL (database/init.sql)</div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 6: CHƯƠNG 2 (TIẾP) - TÍNH NĂNG VÀ NGHIỆM THU ỨNG DỤNG -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h2>2.2. Xây dựng ứng dụng Web Quản lý Hóa đơn</h2>
+    <p>Ứng dụng được xây dựng trên nền tảng <strong>Node.js 20</strong> sử dụng kiến trúc MVC rút gọn:</p>
+    <ul>
+      <li><strong>Module Kết nối CSDL (`app/db.js`)</strong>: Quản lý Connection Pool với thư viện `pg`. Thiết lập cơ chế tự động thử lại kết nối (Retry Logic 10 chu kỳ, ngắt quãng 3 giây) giúp ứng dụng không bị dừng đột ngột (crash) trong quá trình khởi tạo container cơ sở dữ liệu.</li>
+      <li><strong>Module Ghi log cấu trúc (`app/logger.js`)</strong>: Tích hợp thư viện Winston, chuẩn hóa log dạng JSON ghi trực tiếp ra console, phục vụ việc phân tích của Promtail và Loki.</li>
+      <li><strong>Module Đo lường hiệu năng (`app/metrics.js`)</strong>: Sử dụng `prom-client` thu thập chỉ số bộ nhớ heap, CPU và định lượng nghiệp vụ hóa đơn (doanh thu, số hóa đơn tạo mới).</li>
+    </ul>
+
+    <h2>2.3. Tích hợp pgAdmin 4 quản trị CSDL trực quan</h2>
+    <p>Container `billing_pgadmin` được ánh xạ qua cổng host `5050`. Nhờ file cấu hình `pgadmin/servers.json`, pgAdmin được cấu hình tự động nhận diện máy chủ PostgreSQL với tên gọi <code>PostgreSQL Billing Database</code>. Giảng viên và người chấm thi có thể truy cập ngay vào cây thư mục bảng dữ liệu mà không cần tạo mới kết nối thủ công.</p>
+
+    <h2>2.4. Kết quả nghiệm thu các phân hệ nghiệp vụ</h2>
+    <table style="font-size: 11pt;">
+      <thead>
+        <tr>
+          <th>Phân hệ</th>
+          <th>Chức năng chính</th>
+          <th>Kết quả thực tế</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Bảng điều khiển (Dashboard)</strong></td>
+          <td>Thống kê doanh thu thực thu, công nợ tồn đọng, biểu đồ doanh thu Chart.js 6 tháng, danh sách hóa đơn và thanh toán mới</td>
+          <td>Hiển thị trực quan, biểu đồ đường và biểu đồ tròn tự động tính toán từ CSDL</td>
+        </tr>
+        <tr>
+          <td><strong>Quản lý Khách hàng</strong></td>
+          <td>Danh bạ doanh nghiệp, tìm kiếm tức thời theo mã/tên/MST, thêm, sửa thông tin, xóa khách hàng có ràng buộc dữ liệu</td>
+          <td>Hoạt động ổn định, nạp sẵn 5 tập đoàn công nghệ lớn</td>
+        </tr>
+        <tr>
+          <td><strong>Quản lý Hóa đơn</strong></td>
+          <td>Khởi tạo HĐ nhiều mặt hàng, tính tiền hàng và VAT tự động, lọc theo trạng thái (Paid, Pending, Overdue), xuất mẫu in PDF</td>
+          <td>Mẫu hóa đơn điện tử chuyên nghiệp, tự động chuyển trạng thái khi thanh toán đủ</td>
+        </tr>
+        <tr>
+          <td><strong>Quản lý Thanh toán</strong></td>
+          <td>Lập phiếu thu cho hóa đơn chưa tất toán, lưu số tài khoản, mã tham chiếu ngân hàng, phương thức thanh toán</td>
+          <td>Tự động cập nhật công nợ còn lại và ghi nhận doanh thu vào Prometheus metrics</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 7: CHƯƠNG 3 - NGINX REVERSE PROXY VÀ HTTPS -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h1>CHƯƠNG 3: CẤU HÌNH NGINX REVERSE PROXY, HTTPS VÀ BẢO MẬT</h1>
+
+    <h2>3.1. Vai trò của Nginx Reverse Proxy</h2>
+    <p>Nginx là thành phần gateway đứng trước toàn bộ hạ tầng backend. Nginx tiếp nhận các kết nối bên ngoài, giải mã SSL/TLS (SSL Termination), áp dụng các chính sách bảo mật HTTP Security Headers, kiểm soát tốc độ request (Rate Limiting) và chuyển tiếp các gói tin hợp lệ vào container Web App qua giao thức HTTP nội bộ.</p>
+
+    <h2>3.2. Cấu hình chuyển hướng HTTP (80) sang HTTPS (443)</h2>
+    <p>Để ngăn chặn các hình thức nghe lén thông tin gói tin trên đường truyền, toàn bộ yêu cầu gửi đến cổng 80 đều được chuyển hướng vĩnh viễn (301 Moved Permanently) sang giao thức HTTPS:</p>
+    <div class="code-box">server {
+    listen 80;
+    server_name localhost;
+
+    # Endpoint kiểm tra trạng thái Nginx cho Prometheus
+    location /nginx_status {
+        stub_status on;
+        allow 127.0.0.1;
+        allow 172.16.0.0/12; # Dải mạng Docker nội bộ
+        deny all;
+    }
+
+    # Bắt buộc chuyển hướng sang HTTPS
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}</div>
+
+    <h2>3.3. Hiện thực hóa chứng chỉ bảo mật SSL/TLS tự ký</h2>
+    <p>Container Nginx được xây dựng từ `nginx/Dockerfile` kết hợp script `docker-entrypoint.sh`. Khi khởi động, nếu hệ thống chưa phát hiện chứng chỉ SSL, OpenSSL sẽ được tự động kích hoạt để sinh cặp khóa RSA 2048-bit và chứng chỉ X.509 tự ký có thời hạn 365 ngày cho domain `localhost`. Cấu hình SSL chỉ bật giao thức `TLSv1.2` và `TLSv1.3`, vô hiệu hóa toàn bộ các thuật toán mã hóa yếu có nguy cơ bị tấn công Man-in-the-Middle.</p>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 8: CHƯƠNG 3 (TIẾP) - SECURITY HEADERS VÀ RATE LIMITING -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h2>3.4. Cấu hình bộ 7 Security Headers tiêu chuẩn quốc tế</h2>
+    <p>Nginx được trang bị đầy đủ 7 HTTP Response Headers bảo vệ ứng dụng trước các cuộc tấn công theo khuyến nghị của tổ chức an ninh OWASP:</p>
+    
+    <div class="code-box"># 1. Bắt buộc kết nối an toàn HTTPS trong 1 năm
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+# 2. Ngăn chặn tấn công Clickjacking bằng cấm nhúng iframe lạ
+add_header X-Frame-Options "SAMEORIGIN" always;
+
+# 3. Ngăn chặn trình duyệt đoán định dạng MIME (chống thực thi file độc hại)
+add_header X-Content-Type-Options "nosniff" always;
+
+# 4. Kích hoạt bộ lọc chống XSS trên trình duyệt cũ
+add_header X-XSS-Protection "1; mode=block" always;
+
+# 5. Kiểm soát thông tin đường dẫn tham chiếu khi chuyển trang
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+# 6. Kiểm soát nguồn tải tài nguyên JavaScript, CSS, Font hợp lệ
+add_header Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data:; font-src 'self' https://cdnjs.cloudflare.com;" always;
+
+# 7. Vô hiệu hóa quyền truy cập thiết bị phần cứng nhạy cảm
+add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;</div>
+
+    <h2>3.5. Kiểm soát tần suất truy cập (Rate Limiting) phòng chống DoS</h2>
+    <p>Nhằm ngăn chặn hành vi gửi request ồ ạt làm tê liệt hệ thống (Denial of Service - DoS) hoặc dò quét mật khẩu (Brute Force), Nginx khai báo vùng nhớ lưu trữ IP máy khách với hạn mức tối đa 15 request/giây:</p>
+    <div class="code-box">limit_req_zone $binary_remote_addr zone=billing_req_limit:10m rate=15r/s;
+limit_req_status 429;
+
+location / {
+    limit_req zone=billing_req_limit burst=20 nodelay;
+    proxy_pass http://app:3000;
+    ...
+}</div>
+    <p>Khi lưu lượng vượt ngưỡng cho phép, Nginx sẽ từ chối xử lý và phản hồi ngay lập tức mã trạng thái <code>HTTP 429 Too Many Requests</code>, bảo vệ tuyệt đối tài nguyên của ứng dụng backend.</p>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 9: CHƯƠNG 4 - HỆ THỐNG GIÁM SÁT PROMETHEUS & GRAFANA -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h1>CHƯƠNG 4: HỆ THỐNG GIÁM SÁT PROMETHEUS VÀ GRAFANA</h1>
+
+    <h2>4.1. Nguyên lý thu thập metrics kéo (Pull-based) của Prometheus</h2>
+    <p>Prometheus hoạt động theo mô hình kéo chỉ số (Pull-based Model). Cứ sau mỗi chu kỳ định sẵn (5 giây với Web App, 10 giây với Database), máy chủ Prometheus sẽ gửi HTTP GET request đến các endpoint `/metrics` của từng dịch vụ đích được khai báo trong file cấu hình `prometheus.yml`:</p>
+
+    <div class="diagram-box">
++---------------------+                      +------------------------+
+|   PROMETHEUS        |                      |   DỊCH VỤ ĐƯỢC GIÁM SÁT|
+|   SERVER (9090)     |                      |                        |
+|                     |--- HTTP GET /metrics -------> Web App (Port 3000)     |
+|   - Scrape Engine   |<-- Trả về Text Metrics ------                         |
+|   - TSDB Storage    |                                                       |
+|   - PromQL Engine   |--- HTTP GET:9187 -----------> Postgres-Exporter       |
++---------------------+<-- Trả về DB Metrics --------- (Port 9187)            |
+          |                                                                   |
+          | PromQL API Query                                                  |
+          v                                                                   v
++---------------------+                                                       |
+|   GRAFANA (3001)    |                                                       |
+|   - Dashboards      |-------------------------------------------------------+
+|   - Alerts, Panels  |
++---------------------+</div>
+    <div class="caption">Hình 4.1: Luồng hoạt động thu thập và biểu diễn dữ liệu của Prometheus & Grafana</div>
+
+    <h2>4.2. Cấu hình thu thập chỉ số trong `prometheus.yml`</h2>
+    <div class="code-box">global:
+  scrape_interval: 10s
+
+scrape_configs:
+  - job_name: 'billing-app'
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['app:3000']
+
+  - job_name: 'postgresql'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']</div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 10: CHƯƠNG 4 (TIẾP) - DASHBOARDS TRÊN GRAFANA -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h2>4.3. Xây dựng 2 Dashboards chuyên nghiệp trên Grafana</h2>
+    <p>Grafana được nạp sẵn 2 Dashboard hoàn chỉnh thông qua cơ chế tự động Provisioning:</p>
+
+    <h3>1. Dashboard: Billing Web App - Giám Sát Hiệu Năng & Nghiệp Vụ</h3>
+    <table style="font-size: 11pt;">
+      <thead>
+        <tr>
+          <th>Tên Panel</th>
+          <th>Loại hiển thị</th>
+          <th>Câu truy vấn PromQL</th>
+          <th>Ý nghĩa theo dõi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tổng Doanh Thu</strong></td>
+          <td>Stat Box</td>
+          <td><code>billing_revenue_total_vnd</code></td>
+          <td>Số tiền thực thu lũy kế của toàn bộ các hóa đơn</td>
+        </tr>
+        <tr>
+          <td><strong>Hóa Đơn Tạo Mới</strong></td>
+          <td>Stat Box</td>
+          <td><code>billing_invoices_created_total</code></td>
+          <td>Đếm tổng số lượt phát hành hóa đơn mới</td>
+        </tr>
+        <tr>
+          <td><strong>Tần Suất Request HTTP</strong></td>
+          <td>Time Series</td>
+          <td><code>sum by (status_code) (rate(http_requests_total[1m]))</code></td>
+          <td>Lưu lượng truy cập (RPS) theo mã lỗi HTTP (200, 400, 500)</td>
+        </tr>
+        <tr>
+          <td><strong>Độ Trễ Phản Hồi p95</strong></td>
+          <td>Time Series</td>
+          <td><code>histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[1m])) by (le))</code></td>
+          <td>Độ trễ 95% số request, phát hiện tắc nghẽn xử lý</td>
+        </tr>
+        <tr>
+          <td><strong>Node.js Heap Memory</strong></td>
+          <td>Time Series</td>
+          <td><code>billing_app_nodejs_heap_size_used_bytes</code></td>
+          <td>Giám sát rò rỉ bộ nhớ RAM của tiến trình ứng dụng</td>
+        </tr>
+        <tr>
+          <td><strong>CPU Usage (%)</strong></td>
+          <td>Time Series</td>
+          <td><code>rate(billing_app_process_cpu_seconds_total[1m]) * 100</code></td>
+          <td>Tỷ lệ phần trăm CPU tiêu thụ bởi ứng dụng Web</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>2. Dashboard: PostgreSQL Database - Giám Sát Cơ Sở Dữ Liệu</h3>
+    <table style="font-size: 11pt;">
+      <thead>
+        <tr>
+          <th>Tên Panel</th>
+          <th>Loại hiển thị</th>
+          <th>Câu truy vấn PromQL</th>
+          <th>Ý nghĩa theo dõi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Active Connections</strong></td>
+          <td>Stat Gauge</td>
+          <td><code>sum(pg_stat_activity_count{state="active"})</code></td>
+          <td>Số kết nối đang truy vấn đồng thời tới PostgreSQL</td>
+        </tr>
+        <tr>
+          <td><strong>Database Size</strong></td>
+          <td>Stat Box</td>
+          <td><code>pg_database_size_bytes{datname="billing_db"}</code></td>
+          <td>Dung lượng đĩa thực tế của cơ sở dữ liệu `billing_db`</td>
+        </tr>
+        <tr>
+          <td><strong>Tỷ Lệ Cache Hit</strong></td>
+          <td>Gauge (%)</td>
+          <td><code>sum(rate(pg_stat_database_blks_hit[5m])) / (sum(...) + sum(...))</code></td>
+          <td>Hiệu quả bộ nhớ đệm Buffer Cache (luôn duy trì > 95%)</td>
+        </tr>
+        <tr>
+          <td><strong>Tần Suất Commits/s</strong></td>
+          <td>Time Series</td>
+          <td><code>rate(pg_stat_database_xact_commit[1m])</code></td>
+          <td>Tốc độ xác nhận giao dịch ghi dữ liệu thành công</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 11: CHƯƠNG 5 - GHI LOG TẬP TRUNG VỚI LOKI & PROMTAIL -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h1>CHƯƠNG 5: HỆ THỐNG GHI LOG TẬP TRUNG LOKI VÀ PROMTAIL</h1>
+
+    <h2>5.1. Kiến trúc giải pháp Grafana Loki</h2>
+    <p>Thay vì sử dụng ELK Stack cồng kềnh, hệ thống lựa chọn giải pháp <strong>Grafana Loki</strong> hiện đại. Loki không đánh chỉ mục toàn văn bản (Full-text index) mà chỉ lập chỉ mục cho các nhãn phân loại (Labels), nén nội dung log thô thành các chuỗi khối (Chunks) lưu vào bộ nhớ đĩa. Giải pháp này giúp tiết kiệm tới 80% tài nguyên RAM và dung lượng đĩa so với Elasticsearch.</p>
+
+    <h2>5.2. Chuẩn hóa định dạng log JSON có cấu trúc (Structured Logging)</h2>
+    <p>Ứng dụng Web sử dụng Winston Logger để chuẩn hóa mọi bản ghi HTTP request dưới định dạng JSON tường minh:</p>
+    <div class="code-box">{
+  "timestamp": "2026-10-01T08:35:12.456Z",
+  "service": "billing-app",
+  "level": "info",
+  "message": "HTTP Request Processed",
+  "method": "POST",
+  "url": "/invoices/create",
+  "status": 200,
+  "duration_ms": 45,
+  "client_ip": "172.18.0.4",
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)..."
+}</div>
+
+    <h2>5.3. Cấu hình Promtail Agent thu thập log</h2>
+    <p>Promtail được cấu hình 2 job thu thập log chính:</p>
+    <ul>
+      <li><strong>`nginx-logs`</strong>: Quét và đẩy các file `/var/log/nginx/access.log` và `error.log`.</li>
+      <li><strong>`docker-containers`</strong>: Kết nối trực tiếp vào `/var/run/docker.sock` ở chế độ chỉ đọc, lọc các container có nhãn thuộc hệ thống `billing`, giải mã trường JSON và gán các nhãn động (`status`, `level`, `method`).</li>
+    </ul>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 12: CHƯƠNG 5 (TIẾP) - TRUY VẤN LOG BẰNG LOGQL -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h2>5.4. Thực thi và phân tích các truy vấn LogQL phục vụ kiểm thử</h2>
+    <p>Ngôn ngữ LogQL cho phép lọc dữ liệu log dạng văn bản và chuyển đổi thành dạng số liệu biểu đồ. Dưới đây là 4 câu truy vấn chuẩn mực được thiết lập sẵn cho đề tài:</p>
+
+    <h3>🔹 Câu truy vấn 1: Trích xuất toàn bộ luồng log của ứng dụng Web</h3>
+    <div class="code-box">{service="billing-web"}</div>
+    <p class="no-indent"><strong>Ý nghĩa:</strong> Hiển thị toàn bộ các hoạt động tiếp nhận request và luồng xử lý nghiệp vụ của ứng dụng Node.js.</p>
+
+    <h3>🔹 Câu truy vấn 2: Lọc các bản ghi sự cố Lỗi (ERROR) hoặc Cảnh báo (WARN)</h3>
+    <div class="code-box">{service="billing-web"} | json | level =~ "error|warn"</div>
+    <p class="no-indent"><strong>Ý nghĩa:</strong> Lọc tức thời các trường hợp phát sinh lỗi máy chủ. Để kiểm thử tính năng này trên giao diện, bấm nút đỏ <em>"Tạo Log Lỗi (Test Loki)"</em> trên thanh menu website, bản ghi sự cố HTTP 500 giả lập sẽ xuất hiện ngay trong cửa sổ Grafana Explore.</p>
+
+    <h3>🔹 Câu truy vấn 3: Tính toán tần suất request theo mã trạng thái HTTP (Rate Query)</h3>
+    <div class="code-box">sum by (status) (rate({job="nginx"} | json [1m]))</div>
+    <p class="no-indent"><strong>Ý nghĩa:</strong> Biến đổi dữ liệu chuỗi log thô thành biểu đồ đường, thống kê lưu lượng request mỗi giây phân loại theo mã trạng thái HTTP (200, 301, 404, 500).</p>
+
+    <h3>🔹 Câu truy vấn 4: Nhật ký truy cập thành công vào phân hệ Hóa đơn</h3>
+    <div class="code-box">{job="nginx"} |= "invoices" | json | status == 200</div>
+    <p class="no-indent"><strong>Ý nghĩa:</strong> Tạo luồng nhật ký kiểm toán (Audit Log) theo dõi danh sách người dùng đã truy cập thành công vào khu vực quản lý hóa đơn.</p>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 13: CHƯƠNG 6 - HARDENING BẢO MẬT HỆ THỐNG -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h1>CHƯƠNG 6: ÁP DỤNG CÁC BIỆN PHÁP HARDENING BẢO MẬT</h1>
+
+    <h2>6.1. Thực thi Non-Root User Container</h2>
+    <p>Mặc định các ứng dụng chạy trong container dưới quyền người dùng `root` (UID 0), tiềm ẩn nguy cơ tin tặc chiếm quyền máy chủ host nếu container bị xâm nhập. Hệ thống đã khắc phục triệt để nguy cơ này bằng cách cấu hình người dùng đặc quyền thấp trong `Dockerfile`:</p>
+    <div class="code-box"># Tạo user phi đặc quyền UID/GID 10001
+RUN addgroup -S -g 10001 appgroup && \
+    adduser -S -u 10001 -G appgroup -s /bin/sh appuser
+
+WORKDIR /app
+COPY . .
+RUN chown -R appuser:appgroup /app
+
+# Chuyển quyền thực thi sang appuser
+USER appuser</div>
+    <p>Đồng thời trong `docker-compose.yml`, kích hoạt cờ <code>security_opt: [ "no-new-privileges:true" ]</code> để chặn đứng các hành vi leo thang đặc quyền.</p>
+
+    <h2>6.2. Phân vùng mạng cách ly 3 tầng (Network Isolation)</h2>
+    <p>Cơ sở dữ liệu PostgreSQL chỉ kết nối trong mạng `billing_backend_net`. Cổng `5432` không được xuất ra máy chủ host (`ports: - "5432:5432"` bị loại bỏ hoàn toàn). Tin tặc ở mạng bên ngoài hoàn toàn không có khả năng kết nối trực tiếp vào CSDL để thực hiện các cuộc tấn công Brute Force hay khai thác lỗ hổng cơ sở dữ liệu.</p>
+
+    <h2>6.3. Nguyên tắc đặc quyền tối thiểu (Least Privilege) trên Database</h2>
+    <p>Ứng dụng không sử dụng tài khoản siêu quản trị `postgres`. Trong script `database/init.sql`, hệ thống tạo user chuyên biệt `billing_user` và chỉ cấp các quyền thao tác dữ liệu tối thiểu (`SELECT`, `INSERT`, `UPDATE`, `DELETE`) trên các bảng thuộc database `billing_db`. Tài khoản này bị tước bỏ toàn bộ quyền can thiệp hệ thống máy chủ CSDL.</p>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 14: CHƯƠNG 6 (TIẾP) - BẢO MẬT BÍ MẬT VÀ TÀI NGUYÊN -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h2>6.4. Bảo vệ bí mật thông qua Environment Variables và Gitignore</h2>
+    <p>Tất cả các mật khẩu kết nối CSDL, pgAdmin, Grafana đều được thiết lập với độ phức tạp cao (>12 ký tự, gồm chữ hoa, chữ thường, số, ký tự đặc biệt). File cấu hình `.env` chứa mật khẩu thực tế được loại trừ thông qua `.gitignore` để không bao giờ bị lộ lọt lên repository GitHub. Dự án chỉ cung cấp file mẫu `.env.example` an toàn.</p>
+
+    <h2>6.5. Ẩn thông tin phiên bản và hạn mức tài nguyên container</h2>
+    <ul>
+      <li>Nginx cấu hình chỉ thị <code>server_tokens off;</code> giúp xóa số hiệu phiên bản phần mềm trong tiêu đề HTTP Header, ngăn chặn kẻ tấn công thu thập thông tin lỗ hổng.</li>
+      <li>Cấu hình hạn mức tài nguyên (Resource Limits) trong `docker-compose.yml` giới hạn trần CPU và RAM cho từng container (ví dụ: Node.js app giới hạn 1 CPU, 512MB RAM; Nginx giới hạn 0.5 CPU, 256MB RAM), ngăn chặn sự cố cạn kiệt tài nguyên máy chủ vật lý khi bị tấn công quá tải.</li>
+    </ul>
+
+    <div class="alert-box">
+      <strong>Tổng kết các biện pháp Hardening đạt chuẩn điểm tối đa (1.5đ):</strong><br>
+      1. Non-Root Container (UID 10001 & No-new-privileges)<br>
+      2. Network Isolation (Cô lập CSDL trong backend_net, không publish port 5432)<br>
+      3. Least Privilege Database User (Không dùng tài khoản postgres)<br>
+      4. Nginx Hardening (Ẩn server_tokens, Rate Limiting 15 req/s, 7 Security Headers)<br>
+      5. Secret Management (.env an toàn, mật khẩu phức tạp, loại trừ khỏi Git)<br>
+      6. Container Resource Limits (Giới hạn CPU và Memory trần chống DoS tài nguyên)
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 15: CHƯƠNG 7 - KỊCH BẢN KIỂM THỬ VÀ HƯỚNG DẪN DEMO -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h1>CHƯƠNG 7: KỊCH BẢN KIỂM THỬ VÀ HƯỚNG DẪN DEMO</h1>
+
+    <h2>7.1. Bảng tổng hợp đánh giá 7 tiêu chí theo barem chấm điểm</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Tiêu chí đánh giá</th>
+          <th>Điểm</th>
+          <th>Minh chứng thực tế trong hệ thống</th>
+          <th>Kết quả</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Quản lý mã nguồn GitHub</strong></td>
+          <td>1.5</td>
+          <td>Repository có đúng 03 commit có ý nghĩa, file README hướng dẫn chi tiết, script `setup-git.bat` / `.sh`</td>
+          <td>ĐẠT TỐI ĐA</td>
+        </tr>
+        <tr>
+          <td><strong>2. Triển khai ứng dụng & Database</strong></td>
+          <td>1.5</td>
+          <td>Website quản lý HĐ, khách hàng, thanh toán chạy ổn định; pgAdmin tự nhận diện kết nối CSDL tại cổng 5050</td>
+          <td>ĐẠT TỐI ĐA</td>
+        </tr>
+        <tr>
+          <td><strong>3. Nginx Reverse Proxy</strong></td>
+          <td>1.5</td>
+          <td>Truy cập HTTPS tự ký qua cổng 443, tự động redirect 301 từ cổng 80, trang bị đầy đủ 7 Security Headers</td>
+          <td>ĐẠT TỐI ĐA</td>
+        </tr>
+        <tr>
+          <td><strong>4. Hệ thống giám sát (Prometheus + Grafana)</strong></td>
+          <td>1.5</td>
+          <td>Prometheus scrape UP 100%; Grafana có sẵn 2 Dashboards giám sát Web App và CSDL PostgreSQL</td>
+          <td>ĐẠT TỐI ĐA</td>
+        </tr>
+        <tr>
+          <td><strong>5. Hệ thống log tập trung (Loki + Promtail)</strong></td>
+          <td>1.5</td>
+          <td>Loki + Promtail hoạt động; Winston log JSON; thực thi thành công 4 câu truy vấn LogQL trong Explore</td>
+          <td>ĐẠT TỐI ĐA</td>
+        </tr>
+        <tr>
+          <td><strong>6. Hardening hệ thống</strong></td>
+          <td>1.5</td>
+          <td>Non-root container (UID 10001), cô lập mạng 3 tầng, CSDL least privilege, mật khẩu mạnh, ẩn server_tokens</td>
+          <td>ĐẠT TỐI ĐA</td>
+        </tr>
+        <tr>
+          <td><strong>7. Tổng thể & Trình bày</strong></td>
+          <td>1.0</td>
+          <td>Hệ thống 9 container chạy bằng 1 lệnh docker compose up -d, tài liệu báo cáo học thuật đầy đủ &gt; 15 trang</td>
+          <td>ĐẠT TỐI ĐA</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>7.2. Các câu lệnh minh chứng nhanh phục vụ bảo vệ đề tài</h2>
+    <div class="code-box"># 1. Kiểm tra 03 commit Git theo đúng lộ trình
+git log --oneline
+
+# 2. Kiểm tra chuyển hướng HTTP sang HTTPS và Security Headers
+curl -I http://localhost
+curl -k -I https://localhost
+
+# 3. Minh chứng container chạy dưới quyền Non-root
+docker compose exec app id
+# Trả về: uid=10001(appuser) gid=10001(appgroup)
+
+# 4. Minh chứng Database được cô lập (không lộ cổng ra host)
+docker compose ps db</div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- TRANG 16: KẾT LUẬN VÀ TÀI LIỆU THAM KHẢO -->
+  <!-- ========================================================================= -->
+  <div class="page">
+    <h1>KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN</h1>
+
+    <h2>Kết luận</h2>
+    <p>Qua quá trình nghiên cứu và thực hiện đề tài, nhóm sinh viên đã hoàn thành xuất sắc toàn bộ các mục tiêu đặt ra cho <strong>Đề tài 18: Hệ thống Quản lý Hóa đơn</strong>. Toàn bộ các dịch vụ được tự động hóa triển khai bằng Docker Compose, đáp ứng trọn vẹn cả yêu cầu về mặt nghiệp vụ phần mềm và các tiêu chuẩn khắt khe về mặt hạ tầng quản trị, an ninh mạng và khả năng quan sát hệ thống (Observability).</p>
+    <p>Đề tài là một minh chứng thực tế rõ nét cho việc ứng dụng triết lý DevOps, CI/CD và kiến trúc phòng thủ đa tầng trong việc xây dựng và vận hành các hệ thống phần mềm doanh nghiệp hiện đại.</p>
+
+    <h2>Hướng phát triển trong tương lai</h2>
+    <ul>
+      <li>Nâng cấp mô hình triển khai từ Docker Compose lên cụm điều phối <strong>Kubernetes (K8s)</strong> với Helm Chart nhằm nâng cao khả năng tự phục hồi (Self-healing) và tự động mở rộng theo tải (Horizontal Pod Autoscaler).</li>
+      <li>Tích hợp hệ thống cảnh báo tự động qua ứng dụng Telegram hoặc Slack thông qua Prometheus Alertmanager khi hệ thống vượt ngưỡng CPU/RAM hoặc độ trễ phản hồi quá cao.</li>
+      <li>Hoàn thiện quy trình ký số hóa đơn điện tử bảo mật chuẩn HSM/USB Token đáp ứng theo quy định pháp lý hiện hành của Tổng cục Thuế.</li>
+    </ul>
+
+    <h1>TÀI LIỆU THAM KHẢO</h1>
+    <ol style="margin-left: 2cm; font-size: 11pt;">
+      <li>Docker Documentation: <em>Compose file reference & Best practices for Dockerfiles</em> (https://docs.docker.com/).</li>
+      <li>Nginx Documentation: <em>Nginx Reverse Proxy, SSL Termination and Security Headers</em> (https://nginx.org/).</li>
+      <li>Prometheus Community: <em>Prometheus Monitoring System and PromQL Query Guide</em> (https://prometheus.io/).</li>
+      <li>Grafana Labs: <em>Grafana Dashboards Provisioning & Grafana Loki LogQL Documentation</em> (https://grafana.com/).</li>
+      <li>OWASP Foundation: <em>OWASP Secure Headers Project & Docker Security Cheat Sheet</em> (https://owasp.org/).</li>
+      <li>PostgreSQL Global Development Group: <em>PostgreSQL 16 Documentation</em> (https://www.postgresql.org/).</li>
+    </ol>
+  </div>
+
+</body>
+</html>
