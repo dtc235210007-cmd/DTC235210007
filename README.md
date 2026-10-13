@@ -2,9 +2,12 @@
 
 > **Môn học**: Triển khai và Quản trị Hệ thống Phần mềm  
 > **Đề tài 18**: Hệ thống Quản lý Hóa đơn / Billing  
-> **Sinh viên thực hiện**: Đằng Hữu Chinh 
+> **Sinh viên thực hiện**: Đằng Hữu Chinh
+> 
 > **Mã số sinh viên**: DTC235210007
-> **Lớp**: CNTT K23H 
+> 
+> **Lớp**: CNTT K23H
+> 
 > **Giảng viên hướng dẫn**: ThS.Lê Khánh Dương
 
 ---
